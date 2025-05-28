@@ -10,13 +10,17 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'echo "Build image here"'
+                sh 'docker build -t grafana-custom:latest .'
             }
         }
 
         stage('Run Grafana Container') {
             steps {
-                sh 'echo "Run container here"'
+                sh '''
+                    docker stop grafana || true
+                    docker rm grafana || true
+                    docker run -d -p 3000:3000 --name grafana grafana-custom:latest
+                '''
             }
         }
 
